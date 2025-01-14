@@ -124,7 +124,7 @@ describe('ProductService', () => {
 
       mockProductRepo.update.mockResolvedValue({ affected: 1 });
 
-      const result = await productService.update(1, updateProductDto, adminUser);
+      const result = await productService.update( updateProductDto, adminUser);
 
       expect(result.statusCode).toBe(HttpStatus.CREATED);
       expect(result.message).toBe('Product Updated successfully');
@@ -141,11 +141,11 @@ describe('ProductService', () => {
       const nonAdminUser = { role: UserRole.USER } as User;
 
       await expect(
-        productService.update(1, updateProductDto, nonAdminUser),
+        productService.update( updateProductDto, nonAdminUser),
       ).rejects.toThrow(HttpException);
 
       await expect(
-        productService.update(1, updateProductDto, nonAdminUser),
+        productService.update( updateProductDto, nonAdminUser),
       ).rejects.toThrow('Only admin can delete products');
     });
   });
