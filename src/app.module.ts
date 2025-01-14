@@ -7,14 +7,14 @@ import { ProductModule } from './product/product.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql', // Or 'postgres', 'sqlite', etc.
+      type: 'mysql', 
       host: 'localhost',
       port: 3306,
       username: 'root',
       password: 'Password@12345',
       database: 'task',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // Set to false in production
+      synchronize: true, 
     }),
     UserModule,
     ProductModule,

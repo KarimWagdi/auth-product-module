@@ -30,9 +30,9 @@ describe('ProductController', () => {
         },
       ],
     })
-      .overrideGuard(JwtAuthGuard) // Mocking JwtAuthGuard to avoid real auth flow
+      .overrideGuard(JwtAuthGuard) 
       .useValue({
-        canActivate: jest.fn().mockResolvedValue(true), // Mock guard to always pass
+        canActivate: jest.fn().mockResolvedValue(true), 
       })
       .compile();
 

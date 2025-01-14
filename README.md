@@ -8,8 +8,6 @@ $ npm install
 ```bash
 # development
 $ npm run start
-# or run
-$ docker-compose up
 
 # watch mode
 $ npm run start:dev

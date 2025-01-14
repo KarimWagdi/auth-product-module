@@ -9,7 +9,7 @@ async function bootstrap() {
     .setTitle('My NestJS App')
     .setDescription('The API documentation')
     .setVersion('1.0')
-    .addBearerAuth() // Enable JWT token in Swagger
+    .addBearerAuth() 
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

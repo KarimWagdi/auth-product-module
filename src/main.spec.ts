@@ -61,9 +61,8 @@ describe('UserService', () => {
           updatedAt: undefined
       };
       const access_token = 'mock_access_token';
-
-      // Mock the repository methods and the AuthService method
-      jest.spyOn(userRepository, 'findOne').mockResolvedValue(null); // No user found
+      
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(null); 
       jest.spyOn(userRepository, 'save').mockResolvedValue(savedUser);
       jest.spyOn(authService, 'generateAccessToken').mockResolvedValue({ access_token });
 
@@ -87,7 +86,7 @@ describe('UserService', () => {
           updatedAt: undefined
       };
 
-      // Mock the repository to simulate an existing user
+      
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(existingUser);
 
       const result = await userService.create(createUserDto);
@@ -109,9 +108,9 @@ describe('UserService', () => {
       };
       const access_token = 'mock_access_token';
 
-      // Mock the repository methods and bcrypt
+      
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true as never); // Simulate correct password
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true as never); 
       jest.spyOn(authService, 'generateAccessToken').mockResolvedValue({ access_token });
 
       const result = await userService.logIn(loginDto);
@@ -131,9 +130,9 @@ describe('UserService', () => {
           updatedAt: undefined
       };
 
-      // Mock the repository methods and bcrypt
+      
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false as never); // Simulate incorrect password
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false as never); 
 
       const result = await userService.logIn(loginDto);
 

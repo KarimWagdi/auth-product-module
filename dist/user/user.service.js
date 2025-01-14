@@ -26,15 +26,12 @@ let UserService = class UserService {
     }
     async create(createUserDto) {
         try {
-            console.log(createUserDto);
             const user = await this.usersRepository.findOne({ where: { email: createUserDto.email } });
             if (user) {
                 return { statusCode: common_1.HttpStatus.BAD_REQUEST, message: 'Email Already Used' };
             }
-            console.log('data');
             const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
             const newUser = await this.usersRepository.save({ ...createUserDto, password: hashedPassword });
-            console.log(newUser);
             const { access_token } = await this.jwtService.generateAccessToken({ id: newUser.id });
             return {
                 statusCode: common_1.HttpStatus.CREATED,
