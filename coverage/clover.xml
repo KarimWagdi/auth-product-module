@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1737822389828" clover="3.2.0">
-  <project timestamp="1737822389828" name="All files">
-    <metrics statements="236" coveredstatements="212" conditionals="16" coveredconditionals="13" methods="39" coveredmethods="36" elements="291" coveredelements="261" complexity="0" loc="236" ncloc="236" packages="11" files="22" classes="22"/>
+<coverage generated="1737822620328" clover="3.2.0">
+  <project timestamp="1737822620328" name="All files">
+    <metrics statements="236" coveredstatements="222" conditionals="16" coveredconditionals="16" methods="39" coveredmethods="37" elements="291" coveredelements="275" complexity="0" loc="236" ncloc="236" packages="11" files="22" classes="22"/>
     <package name="src">
       <metrics statements="28" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>
       <file name="app.controller.ts" path="C:\Users\kwagd\OneDrive\Desktop\New folder\auth-product-module\src\app.controller.ts">
@@ -82,7 +82,7 @@
       </file>
     </package>
     <package name="src.auth.guard">
-      <metrics statements="20" coveredstatements="7" conditionals="3" coveredconditionals="0" methods="3" coveredmethods="1"/>
+      <metrics statements="20" coveredstatements="17" conditionals="3" coveredconditionals="3" methods="3" coveredmethods="2"/>
       <file name="jwt-auth.guard.ts" path="C:\Users\kwagd\OneDrive\Desktop\New folder\auth-product-module\src\auth\guard\jwt-auth.guard.ts">
         <metrics statements="6" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="2" type="stmt"/>
@@ -93,21 +93,21 @@
         <line num="9" count="0" type="stmt"/>
       </file>
       <file name="roles.guard.ts" path="C:\Users\kwagd\OneDrive\Desktop\New folder\auth-product-module\src\auth\guard\roles.guard.ts">
-        <metrics statements="14" coveredstatements="4" conditionals="3" coveredconditionals="0" methods="2" coveredmethods="1"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="11" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="19" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="24" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
+        <metrics statements="14" coveredstatements="14" conditionals="3" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="6" type="stmt"/>
+        <line num="10" count="4" type="stmt"/>
+        <line num="11" count="4" type="cond" truecount="1" falsecount="0"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="17" count="3" type="stmt"/>
+        <line num="19" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="24" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.auth.strategy">
