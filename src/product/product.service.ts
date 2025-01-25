@@ -13,18 +13,9 @@ export class ProductService {
     @InjectRepository(Product)
     public ProductRepo: Repository<Product>
   ){}
-  async create(createProductDto: CreateProductDto, user:User) {
+  async create(createProductDto: CreateProductDto) {
     try{
 
-      if(user.role!== UserRole.ADMIN){
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.FORBIDDEN,
-            message: 'Only admin can delete products',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
       const newProduct = await this.ProductRepo.save(createProductDto)
       return {
         statusCode: HttpStatus.CREATED,
@@ -90,17 +81,9 @@ export class ProductService {
     }
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto, user: User ) {
+  async update(id: number, updateProductDto: UpdateProductDto) {
     try{
-      if(user.role!== UserRole.ADMIN){
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.FORBIDDEN,
-            message: 'Only admin can delete products',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
+
       const updatedProduct = await this.ProductRepo.update( id, updateProductDto)
       return {
         statusCode: HttpStatus.CREATED,
@@ -119,17 +102,8 @@ export class ProductService {
     }
   }
 
-  async remove(id: number, user: User) {
+  async remove(id: number) {
     try{
-      if(user.role!== UserRole.ADMIN){
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.FORBIDDEN,
-            message: 'Only admin can delete products',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
       const deletedProduct = await this.ProductRepo.delete({id});
       return {
         statusCode: HttpStatus.CREATED,

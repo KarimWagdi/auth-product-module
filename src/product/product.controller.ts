@@ -4,6 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { User } from '../user/entities/user.entity';
+import { Role } from '../auth/decorator/roles.decorator';
 
 
 @Controller('products')
@@ -11,10 +12,10 @@ import { User } from '../user/entities/user.entity';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
+  @Role('admin')
   @Post()
-  async create( @Request() req, @Body() createProductDto: CreateProductDto) {
-    const user = req['user'] as User;
-    return await this.productService.create(createProductDto, user);
+  async create(@Body() createProductDto: CreateProductDto) {
+    return await this.productService.create(createProductDto);
   }
 
   @Get()
@@ -27,15 +28,15 @@ export class ProductController {
     return this.productService.findOne(+id);
   }
 
+  @Role('admin')
   @Put(':id')
-  update( @Request() req, @Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    const user = req['user'] as User;
-    return this.productService.update( +id, updateProductDto, user );
+  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    return this.productService.update( +id, updateProductDto );
   }
 
+  @Role('admin')
   @Delete(':id')
-  remove( @Request() req, @Param('id') id: string) {
-    const user = req['user'] as User;
-    return this.productService.remove(+id, user);
+  remove(@Param('id') id: string) {
+    return this.productService.remove(+id);
   }
 }

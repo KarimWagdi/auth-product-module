@@ -36,7 +36,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         if (!user || user.token !== jwtToken) {
             throw new common_1.UnauthorizedException('Invalid user or token');
         }
-        return user;
+        return { ...user, role: user.role };
     }
     extractJwtToken(request) {
         const authHeader = request.headers.authorization;

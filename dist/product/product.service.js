@@ -17,19 +17,12 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 const product_entity_1 = require("./entities/product.entity");
 const typeorm_2 = require("@nestjs/typeorm");
-const user_entity_1 = require("../user/entities/user.entity");
 let ProductService = class ProductService {
     constructor(ProductRepo) {
         this.ProductRepo = ProductRepo;
     }
-    async create(createProductDto, user) {
+    async create(createProductDto) {
         try {
-            if (user.role !== user_entity_1.UserRole.ADMIN) {
-                throw new common_1.HttpException({
-                    statusCode: common_1.HttpStatus.FORBIDDEN,
-                    message: 'Only admin can delete products',
-                }, common_1.HttpStatus.FORBIDDEN);
-            }
             const newProduct = await this.ProductRepo.save(createProductDto);
             return {
                 statusCode: common_1.HttpStatus.CREATED,
@@ -85,14 +78,8 @@ let ProductService = class ProductService {
             }, common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async update(id, updateProductDto, user) {
+    async update(id, updateProductDto) {
         try {
-            if (user.role !== user_entity_1.UserRole.ADMIN) {
-                throw new common_1.HttpException({
-                    statusCode: common_1.HttpStatus.FORBIDDEN,
-                    message: 'Only admin can delete products',
-                }, common_1.HttpStatus.FORBIDDEN);
-            }
             const updatedProduct = await this.ProductRepo.update(id, updateProductDto);
             return {
                 statusCode: common_1.HttpStatus.CREATED,
@@ -108,14 +95,8 @@ let ProductService = class ProductService {
             }, common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async remove(id, user) {
+    async remove(id) {
         try {
-            if (user.role !== user_entity_1.UserRole.ADMIN) {
-                throw new common_1.HttpException({
-                    statusCode: common_1.HttpStatus.FORBIDDEN,
-                    message: 'Only admin can delete products',
-                }, common_1.HttpStatus.FORBIDDEN);
-            }
             const deletedProduct = await this.ProductRepo.delete({ id });
             return {
                 statusCode: common_1.HttpStatus.CREATED,

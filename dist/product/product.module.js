@@ -12,14 +12,20 @@ const product_service_1 = require("./product.service");
 const product_controller_1 = require("./product.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const product_entity_1 = require("./entities/product.entity");
+const core_1 = require("@nestjs/core");
+const auth_module_1 = require("../auth/auth.module");
+const roles_guard_1 = require("../auth/guard/roles.guard");
 let ProductModule = class ProductModule {
 };
 exports.ProductModule = ProductModule;
 exports.ProductModule = ProductModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([product_entity_1.Product])],
+        imports: [auth_module_1.AuthModule, typeorm_1.TypeOrmModule.forFeature([product_entity_1.Product])],
         controllers: [product_controller_1.ProductController],
-        providers: [product_service_1.ProductService],
+        providers: [product_service_1.ProductService, {
+                provide: core_1.APP_GUARD,
+                useClass: roles_guard_1.RolesGuard,
+            }],
     })
 ], ProductModule);
 //# sourceMappingURL=product.module.js.map

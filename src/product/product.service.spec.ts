@@ -3,16 +3,15 @@ import { ProductService } from './product.service';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User, UserRole } from '../user/entities/user.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 
 describe('ProductService', () => {
   let service: ProductService;
-  let productRepo: Repository<Product>;
+  let repository: Repository<Product>;
 
-  const mockProductRepo = {
+  const mockRepository = {
     save: jest.fn(),
     find: jest.fn(),
     findOne: jest.fn(),
@@ -26,13 +25,13 @@ describe('ProductService', () => {
         ProductService,
         {
           provide: getRepositoryToken(Product),
-          useValue: mockProductRepo,
+          useValue: mockRepository,
         },
       ],
     }).compile();
 
     service = module.get<ProductService>(ProductService);
-    productRepo = module.get<Repository<Product>>(getRepositoryToken(Product));
+    repository = module.get<Repository<Product>>(getRepositoryToken(Product));
   });
 
   it('should be defined', () => {
@@ -40,135 +39,144 @@ describe('ProductService', () => {
   });
 
   describe('create', () => {
-    it('should create a product if user is admin', async () => {
-      const createProductDto: CreateProductDto = {
-        name: '',
+    it('should create a product and return the result', async () => {
+      const dto: CreateProductDto = {
+        name: 'Test Product', price: 100,
         description: '',
-        price: 0,
         stock: 0
       };
-      const user: User = { id: 1, role: UserRole.ADMIN } as User;
+      const result = { id: 1, ...dto };
 
-      mockProductRepo.save.mockResolvedValue({ id: 1, ...createProductDto });
+      mockRepository.save.mockResolvedValue(result);
 
-      const result = await service.create(createProductDto, user);
+      const response = await service.create(dto);
 
-      expect(result).toEqual({
+      expect(response).toEqual({
         statusCode: HttpStatus.CREATED,
         message: 'Product created successfully',
-        data: { id: 1, ...createProductDto },
+        data: result,
       });
-      expect(mockProductRepo.save).toHaveBeenCalledWith(createProductDto);
+      expect(mockRepository.save).toHaveBeenCalledWith(dto);
     });
 
-    it('should throw an exception if user is not admin', async () => {
-      const createProductDto: CreateProductDto = {
-        name: 'Product 1', price: 100,
+    it('should throw an error when creation fails', async () => {
+      const dto: CreateProductDto = {
+        name: 'Test Product', price: 100,
         description: '',
         stock: 0
       };
-      const user: User = { id: 1, role: UserRole.USER } as User;
+      mockRepository.save.mockRejectedValue(new Error('Save error'));
 
-      await expect(service.create(createProductDto, user)).rejects.toThrow(HttpException);
+      await expect(service.create(dto)).rejects.toThrow(HttpException);
     });
   });
 
   describe('findAll', () => {
     it('should return all products', async () => {
-      const products = [{ id: 1, name: 'Product 1', price: 100 }];
-      mockProductRepo.find.mockResolvedValue(products);
+      const result = [{ id: 1, name: 'Product 1', price: 100 }];
 
-      const result = await service.findAll();
+      mockRepository.find.mockResolvedValue(result);
 
-      expect(result).toEqual({
+      const response = await service.findAll();
+
+      expect(response).toEqual({
         statusCode: HttpStatus.CREATED,
         message: 'Find Products successfully',
-        data: products,
+        data: result,
       });
-      expect(mockProductRepo.find).toHaveBeenCalled();
+      expect(mockRepository.find).toHaveBeenCalled();
+    });
+
+    it('should throw an error when finding products fails', async () => {
+      mockRepository.find.mockRejectedValue(new Error('Find error'));
+
+      await expect(service.findAll()).rejects.toThrow(HttpException);
     });
   });
 
   describe('findOne', () => {
     it('should return a product if found', async () => {
-      const product = { id: 1, name: 'Product 1', price: 100 };
-      mockProductRepo.findOne.mockResolvedValue(product);
+      const result = { id: 1, name: 'Product 1', price: 100 };
 
-      const result = await service.findOne(1);
+      mockRepository.findOne.mockResolvedValue(result);
 
-      expect(result).toEqual({
+      const response = await service.findOne(1);
+
+      expect(response).toEqual({
         statusCode: HttpStatus.CREATED,
         message: 'Find Product successfully',
-        data: product,
+        data: result,
       });
-      expect(mockProductRepo.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
     });
 
-    it('should return a not found response if product is not found', async () => {
-      mockProductRepo.findOne.mockResolvedValue(null);
+    it('should return an error message if the product is not found', async () => {
+      mockRepository.findOne.mockResolvedValue(null);
 
-      const result = await service.findOne(1);
+      const response = await service.findOne(1);
 
-      expect(result).toEqual({
+      expect(response).toEqual({
         statusCode: HttpStatus.BAD_REQUEST,
         message: 'Product not found',
       });
     });
+
+    it('should throw an error when finding a product fails', async () => {
+      mockRepository.findOne.mockRejectedValue(new Error('Find error'));
+
+      await expect(service.findOne(1)).rejects.toThrow(HttpException);
+    });
   });
 
   describe('update', () => {
-    it('should update a product if user is admin', async () => {
-      const updateProductDto: UpdateProductDto = {
-        name: 'Updated Product', price: 200,
+    it('should update a product and return the result', async () => {
+      const dto: UpdateProductDto = {
+        name: 'Updated Product', price: 150,
         description: '',
         stock: 0
       };
-      const user: User = { id: 1, role: UserRole.ADMIN } as User;
+      mockRepository.update.mockResolvedValue({ affected: 1 });
 
-      mockProductRepo.update.mockResolvedValue({ affected: 1 });
+      const response = await service.update(1, dto);
 
-      const result = await service.update(1, updateProductDto, user);
-
-      expect(result).toEqual({
+      expect(response).toEqual({
         statusCode: HttpStatus.CREATED,
         message: 'Product Updated successfully',
-        data: updateProductDto,
+        data: dto,
       });
-      expect(mockProductRepo.update).toHaveBeenCalledWith(1, updateProductDto);
+      expect(mockRepository.update).toHaveBeenCalledWith(1, dto);
     });
 
-    it('should throw an exception if user is not admin', async () => {
-      const updateProductDto: UpdateProductDto = {
-        name: 'Updated Product', price: 200,
+    it('should throw an error when update fails', async () => {
+      const dto: UpdateProductDto = {
+        name: 'Updated Product', price: 150,
         description: '',
         stock: 0
       };
-      const user: User = { id: 1, role: UserRole.USER } as User;
+      mockRepository.update.mockRejectedValue(new Error('Update error'));
 
-      await expect(service.update(1, updateProductDto, user)).rejects.toThrow(HttpException);
+      await expect(service.update(1, dto)).rejects.toThrow(HttpException);
     });
   });
 
   describe('remove', () => {
-    it('should delete a product if user is admin', async () => {
-      const user: User = { id: 1, role: UserRole.ADMIN } as User;
+    it('should delete a product and return a success message', async () => {
+      mockRepository.delete.mockResolvedValue({ affected: 1 });
 
-      mockProductRepo.delete.mockResolvedValue({ affected: 1 });
+      const response = await service.remove(1);
 
-      const result = await service.remove(1, user);
-
-      expect(result).toEqual({
+      expect(response).toEqual({
         statusCode: HttpStatus.CREATED,
         message: 'Product deleted successfully',
         data: 'Product deleted successfully',
       });
-      expect(mockProductRepo.delete).toHaveBeenCalledWith({ id: 1 });
+      expect(mockRepository.delete).toHaveBeenCalledWith({ id: 1 });
     });
 
-    it('should throw an exception if user is not admin', async () => {
-      const user: User = { id: 1, role: UserRole.USER } as User;
+    it('should throw an error when deletion fails', async () => {
+      mockRepository.delete.mockRejectedValue(new Error('Delete error'));
 
-      await expect(service.remove(1, user)).rejects.toThrow(HttpException);
+      await expect(service.remove(1)).rejects.toThrow(HttpException);
     });
   });
 });

@@ -4,7 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export declare class ProductController {
     private productService;
     constructor(productService: ProductService);
-    create(req: any, createProductDto: CreateProductDto): Promise<{
+    create(createProductDto: CreateProductDto): Promise<{
         statusCode: import("@nestjs/common").HttpStatus;
         message: string;
         data: CreateProductDto & import("./entities/product.entity").Product;
@@ -23,12 +23,12 @@ export declare class ProductController {
         message: string;
         data: import("./entities/product.entity").Product;
     }>;
-    update(req: any, id: string, updateProductDto: UpdateProductDto): Promise<{
+    update(id: string, updateProductDto: UpdateProductDto): Promise<{
         statusCode: import("@nestjs/common").HttpStatus;
         message: string;
         data: UpdateProductDto;
     }>;
-    remove(req: any, id: string): Promise<{
+    remove(id: string): Promise<{
         statusCode: import("@nestjs/common").HttpStatus;
         message: string;
         data: string;

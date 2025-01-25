@@ -11,6 +11,9 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_module_1 = require("./user/user.module");
 const product_module_1 = require("./product/product.module");
+const auth_module_1 = require("./auth/auth.module");
+const core_1 = require("@nestjs/core");
+const roles_guard_1 = require("./auth/guard/roles.guard");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,7 +32,14 @@ exports.AppModule = AppModule = __decorate([
             }),
             user_module_1.UserModule,
             product_module_1.ProductModule,
+            auth_module_1.AuthModule
         ],
+        providers: [
+            {
+                provide: core_1.APP_GUARD,
+                useClass: roles_guard_1.RolesGuard,
+            },
+        ]
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

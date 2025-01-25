@@ -18,13 +18,13 @@ const product_service_1 = require("./product.service");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const jwt_auth_guard_1 = require("../auth/guard/jwt-auth.guard");
+const roles_decorator_1 = require("../auth/decorator/roles.decorator");
 let ProductController = class ProductController {
     constructor(productService) {
         this.productService = productService;
     }
-    async create(req, createProductDto) {
-        const user = req['user'];
-        return await this.productService.create(createProductDto, user);
+    async create(createProductDto) {
+        return await this.productService.create(createProductDto);
     }
     findAll() {
         return this.productService.findAll();
@@ -32,22 +32,20 @@ let ProductController = class ProductController {
     findOne(id) {
         return this.productService.findOne(+id);
     }
-    update(req, id, updateProductDto) {
-        const user = req['user'];
-        return this.productService.update(+id, updateProductDto, user);
+    update(id, updateProductDto) {
+        return this.productService.update(+id, updateProductDto);
     }
-    remove(req, id) {
-        const user = req['user'];
-        return this.productService.remove(+id, user);
+    remove(id) {
+        return this.productService.remove(+id);
     }
 };
 exports.ProductController = ProductController;
 __decorate([
+    (0, roles_decorator_1.Role)('admin'),
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, create_product_dto_1.CreateProductDto]),
+    __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "create", null);
 __decorate([
@@ -64,20 +62,20 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "findOne", null);
 __decorate([
+    (0, roles_decorator_1.Role)('admin'),
     (0, common_1.Put)(':id'),
-    __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Param)('id')),
-    __param(2, (0, common_1.Body)()),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, update_product_dto_1.UpdateProductDto]),
+    __metadata("design:paramtypes", [String, update_product_dto_1.UpdateProductDto]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "update", null);
 __decorate([
+    (0, roles_decorator_1.Role)('admin'),
     (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "remove", null);
 exports.ProductController = ProductController = __decorate([

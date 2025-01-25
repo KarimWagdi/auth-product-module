@@ -20,8 +20,4 @@ export class AuthService {
             access_token:access_token ,
         }
     }
-
-
-
-    
 }

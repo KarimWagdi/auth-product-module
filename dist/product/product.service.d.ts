@@ -3,11 +3,10 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
-import { User } from '../user/entities/user.entity';
 export declare class ProductService {
     ProductRepo: Repository<Product>;
     constructor(ProductRepo: Repository<Product>);
-    create(createProductDto: CreateProductDto, user: User): Promise<{
+    create(createProductDto: CreateProductDto): Promise<{
         statusCode: HttpStatus;
         message: string;
         data: CreateProductDto & Product;
@@ -26,12 +25,12 @@ export declare class ProductService {
         message: string;
         data: Product;
     }>;
-    update(id: number, updateProductDto: UpdateProductDto, user: User): Promise<{
+    update(id: number, updateProductDto: UpdateProductDto): Promise<{
         statusCode: HttpStatus;
         message: string;
         data: UpdateProductDto;
     }>;
-    remove(id: number, user: User): Promise<{
+    remove(id: number): Promise<{
         statusCode: HttpStatus;
         message: string;
         data: string;

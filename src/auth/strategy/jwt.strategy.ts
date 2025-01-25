@@ -24,14 +24,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     async validate(request: Request, validationPayload: { id: number }): Promise<any> {
         const jwtToken = this.extractJwtToken(request);
         if (!jwtToken) {
-            throw new UnauthorizedException('Invalid token');
+          throw new UnauthorizedException('Invalid token');
         }
+        
         const user = await this.userService.findOne(validationPayload.id);
         if (!user || user.token !== jwtToken) {
-            throw new UnauthorizedException('Invalid user or token');
+          throw new UnauthorizedException('Invalid user or token');
         }
-        return user;
-    }
+      
+        // Return user object including the role
+        return { ...user, role: user.role }; // Assuming `user.role` is either 'user' or 'admin'
+      }
+      
     private extractJwtToken(request: Request): string | null {
         const authHeader = request.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {

@@ -4,6 +4,9 @@ import { User } from './user/entities/user.entity';
 import { Product } from './product/entities/product.entity';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/guard/roles.guard';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,6 +21,13 @@ import { ProductModule } from './product/product.module';
     }),
     UserModule,
     ProductModule,
+    AuthModule
   ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ]
 })
 export class AppModule {}
