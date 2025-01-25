@@ -84,22 +84,4 @@ describe('UserController', () => {
       await expect(userController.logIn(loginDto)).rejects.toThrow('Login failed');
     });
   });
-
-  describe('findOne', () => {
-    it('should find a user by id', async () => {
-      const mockResult = { id: 1, username: 'testuser' };
-      mockUserService.findOne.mockResolvedValue(mockResult);
-
-      const result = await userController.findOne('1');
-
-      expect(result).toEqual(mockResult);
-      expect(mockUserService.findOne).toHaveBeenCalledWith(1);
-    });
-
-    it('should throw an error if findOne fails', async () => {
-      mockUserService.findOne.mockRejectedValue(new Error('FindOne failed'));
-
-      await expect(userController.findOne('1')).rejects.toThrow('FindOne failed');
-    });
-  });
 });

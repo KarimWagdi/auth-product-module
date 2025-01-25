@@ -32,5 +32,4 @@ export declare class UserController {
             user: import("./entities/user.entity").User;
         };
     }>;
-    findOne(id: string): Promise<import("./entities/user.entity").User>;
 }

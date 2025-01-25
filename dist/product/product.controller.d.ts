@@ -17,9 +17,13 @@ export declare class ProductController {
     findOne(id: string): Promise<{
         statusCode: import("@nestjs/common").HttpStatus;
         message: string;
+        data?: undefined;
+    } | {
+        statusCode: import("@nestjs/common").HttpStatus;
+        message: string;
         data: import("./entities/product.entity").Product;
     }>;
-    update(req: any, updateProductDto: UpdateProductDto): Promise<{
+    update(req: any, id: string, updateProductDto: UpdateProductDto): Promise<{
         statusCode: import("@nestjs/common").HttpStatus;
         message: string;
         data: UpdateProductDto;

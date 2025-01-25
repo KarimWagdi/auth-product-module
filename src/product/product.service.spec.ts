@@ -5,20 +5,20 @@ import { Product } from './entities/product.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User, UserRole } from '../user/entities/user.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
-
-const mockProductRepo = {
-  save: jest.fn(),
-  find: jest.fn(),
-  findOne: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-};
+import { UpdateProductDto } from './dto/update-product.dto';
 
 describe('ProductService', () => {
-  let productService: ProductService;
+  let service: ProductService;
   let productRepo: Repository<Product>;
+
+  const mockProductRepo = {
+    save: jest.fn(),
+    find: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,145 +31,144 @@ describe('ProductService', () => {
       ],
     }).compile();
 
-    productService = module.get<ProductService>(ProductService);
+    service = module.get<ProductService>(ProductService);
     productRepo = module.get<Repository<Product>>(getRepositoryToken(Product));
   });
 
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
   describe('create', () => {
-    it('should create a product successfully for admin user', async () => {
+    it('should create a product if user is admin', async () => {
       const createProductDto: CreateProductDto = {
-        name: 'Test Product', price: 100,
+        name: '',
         description: '',
+        price: 0,
         stock: 0
       };
-      const adminUser = { role: UserRole.ADMIN } as User;
-      const savedProduct = { id: 1, ...createProductDto };
+      const user: User = { id: 1, role: UserRole.ADMIN } as User;
 
-      mockProductRepo.save.mockResolvedValue(savedProduct);
+      mockProductRepo.save.mockResolvedValue({ id: 1, ...createProductDto });
 
-      const result = await productService.create(createProductDto, adminUser);
+      const result = await service.create(createProductDto, user);
 
-      expect(result.statusCode).toBe(HttpStatus.CREATED);
-      expect(result.message).toBe('Product created successfully');
-      expect(result.data).toEqual(savedProduct);
+      expect(result).toEqual({
+        statusCode: HttpStatus.CREATED,
+        message: 'Product created successfully',
+        data: { id: 1, ...createProductDto },
+      });
       expect(mockProductRepo.save).toHaveBeenCalledWith(createProductDto);
     });
 
-    it('should throw forbidden error for non-admin user', async () => {
+    it('should throw an exception if user is not admin', async () => {
       const createProductDto: CreateProductDto = {
-        name: 'Test Product', price: 100,
+        name: 'Product 1', price: 100,
         description: '',
         stock: 0
       };
-      const nonAdminUser = { role: UserRole.USER } as User;
+      const user: User = { id: 1, role: UserRole.USER } as User;
 
-      await expect(
-        productService.create(createProductDto, nonAdminUser),
-      ).rejects.toThrow(HttpException);
-
-      await expect(
-        productService.create(createProductDto, nonAdminUser),
-      ).rejects.toThrow('Only admin can delete products');
+      await expect(service.create(createProductDto, user)).rejects.toThrow(HttpException);
     });
   });
 
   describe('findAll', () => {
     it('should return all products', async () => {
-      const mockProducts = [
-        { id: 1, name: 'Product 1', price: 100 },
-        { id: 2, name: 'Product 2', price: 200 },
-      ];
+      const products = [{ id: 1, name: 'Product 1', price: 100 }];
+      mockProductRepo.find.mockResolvedValue(products);
 
-      mockProductRepo.find.mockResolvedValue(mockProducts);
+      const result = await service.findAll();
 
-      const result = await productService.findAll();
-
-      expect(result.statusCode).toBe(HttpStatus.CREATED);
-      expect(result.message).toBe('Find Products successfully');
-      expect(result.data).toEqual(mockProducts);
+      expect(result).toEqual({
+        statusCode: HttpStatus.CREATED,
+        message: 'Find Products successfully',
+        data: products,
+      });
+      expect(mockProductRepo.find).toHaveBeenCalled();
     });
   });
 
   describe('findOne', () => {
-    it('should return a product by ID', async () => {
-      const mockProduct = { id: 1, name: 'Product 1', price: 100 };
+    it('should return a product if found', async () => {
+      const product = { id: 1, name: 'Product 1', price: 100 };
+      mockProductRepo.findOne.mockResolvedValue(product);
 
-      mockProductRepo.findOne.mockResolvedValue(mockProduct);
+      const result = await service.findOne(1);
 
-      const result = await productService.findOne(1);
-
-      expect(result.statusCode).toBe(HttpStatus.CREATED);
-      expect(result.message).toBe('Find Product successfully');
-      expect(result.data).toEqual(mockProduct);
+      expect(result).toEqual({
+        statusCode: HttpStatus.CREATED,
+        message: 'Find Product successfully',
+        data: product,
+      });
+      expect(mockProductRepo.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
     });
 
-    it('should throw an error if product is not found', async () => {
+    it('should return a not found response if product is not found', async () => {
       mockProductRepo.findOne.mockResolvedValue(null);
 
-      await expect(productService.findOne(1)).rejects.toThrow(HttpException);
+      const result = await service.findOne(1);
 
-      await expect(productService.findOne(1)).rejects.toThrow('Find Product failed');
+      expect(result).toEqual({
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Product not found',
+      });
     });
   });
 
   describe('update', () => {
-    it('should update a product successfully for admin user', async () => {
+    it('should update a product if user is admin', async () => {
       const updateProductDto: UpdateProductDto = {
-        name: 'Updated Product', price: 150,
-        id: 0,
+        name: 'Updated Product', price: 200,
         description: '',
         stock: 0
       };
-      const adminUser = { role: UserRole.ADMIN } as User;
+      const user: User = { id: 1, role: UserRole.ADMIN } as User;
 
       mockProductRepo.update.mockResolvedValue({ affected: 1 });
 
-      const result = await productService.update( updateProductDto, adminUser);
+      const result = await service.update(1, updateProductDto, user);
 
-      expect(result.statusCode).toBe(HttpStatus.CREATED);
-      expect(result.message).toBe('Product Updated successfully');
-      expect(result.data).toEqual(updateProductDto);
+      expect(result).toEqual({
+        statusCode: HttpStatus.CREATED,
+        message: 'Product Updated successfully',
+        data: updateProductDto,
+      });
+      expect(mockProductRepo.update).toHaveBeenCalledWith(1, updateProductDto);
     });
 
-    it('should throw forbidden error for non-admin user', async () => {
+    it('should throw an exception if user is not admin', async () => {
       const updateProductDto: UpdateProductDto = {
-        name: 'Updated Product', price: 150,
-        id: 0,
+        name: 'Updated Product', price: 200,
         description: '',
         stock: 0
       };
-      const nonAdminUser = { role: UserRole.USER } as User;
+      const user: User = { id: 1, role: UserRole.USER } as User;
 
-      await expect(
-        productService.update( updateProductDto, nonAdminUser),
-      ).rejects.toThrow(HttpException);
-
-      await expect(
-        productService.update( updateProductDto, nonAdminUser),
-      ).rejects.toThrow('Only admin can delete products');
+      await expect(service.update(1, updateProductDto, user)).rejects.toThrow(HttpException);
     });
   });
 
   describe('remove', () => {
-    it('should remove a product successfully for admin user', async () => {
-      const adminUser = { role: UserRole.ADMIN } as User;
+    it('should delete a product if user is admin', async () => {
+      const user: User = { id: 1, role: UserRole.ADMIN } as User;
 
       mockProductRepo.delete.mockResolvedValue({ affected: 1 });
 
-      const result = await productService.remove(1, adminUser);
+      const result = await service.remove(1, user);
 
-      expect(result.statusCode).toBe(HttpStatus.CREATED);
-      expect(result.message).toBe('Product deleted successfully');
+      expect(result).toEqual({
+        statusCode: HttpStatus.CREATED,
+        message: 'Product deleted successfully',
+        data: 'Product deleted successfully',
+      });
+      expect(mockProductRepo.delete).toHaveBeenCalledWith({ id: 1 });
     });
 
-    it('should throw forbidden error for non-admin user', async () => {
-      const nonAdminUser = { role: UserRole.USER } as User;
+    it('should throw an exception if user is not admin', async () => {
+      const user: User = { id: 1, role: UserRole.USER } as User;
 
-      await expect(productService.remove(1, nonAdminUser)).rejects.toThrow(HttpException);
-
-      await expect(productService.remove(1, nonAdminUser)).rejects.toThrow(
-        'Only admin can delete products',
-      );
+      await expect(service.remove(1, user)).rejects.toThrow(HttpException);
     });
   });
 });

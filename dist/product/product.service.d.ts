@@ -20,9 +20,13 @@ export declare class ProductService {
     findOne(id: number): Promise<{
         statusCode: HttpStatus;
         message: string;
+        data?: undefined;
+    } | {
+        statusCode: HttpStatus;
+        message: string;
         data: Product;
     }>;
-    update(updateProductDto: UpdateProductDto, user: User): Promise<{
+    update(id: number, updateProductDto: UpdateProductDto, user: User): Promise<{
         statusCode: HttpStatus;
         message: string;
         data: UpdateProductDto;

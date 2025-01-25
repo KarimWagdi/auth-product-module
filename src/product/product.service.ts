@@ -68,13 +68,10 @@ export class ProductService {
     try{
       const product = await this.ProductRepo.findOne({where:{id: id}});
       if(!product){
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.NOT_FOUND,
+        return  {
+            statusCode: HttpStatus.BAD_REQUEST,
             message: 'Product not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
+          }
       }
       return {
         statusCode: HttpStatus.CREATED,
@@ -93,7 +90,7 @@ export class ProductService {
     }
   }
 
-  async update(updateProductDto: UpdateProductDto, user: User ) {
+  async update(id: number, updateProductDto: UpdateProductDto, user: User ) {
     try{
       if(user.role!== UserRole.ADMIN){
         throw new HttpException(
@@ -104,7 +101,7 @@ export class ProductService {
           HttpStatus.FORBIDDEN,
         );
       }
-      const updatedProduct = await this.ProductRepo.update(updateProductDto.id, updateProductDto)
+      const updatedProduct = await this.ProductRepo.update( id, updateProductDto)
       return {
         statusCode: HttpStatus.CREATED,
         message: 'Product Updated successfully',

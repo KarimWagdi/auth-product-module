@@ -32,9 +32,9 @@ let ProductController = class ProductController {
     findOne(id) {
         return this.productService.findOne(+id);
     }
-    update(req, updateProductDto) {
+    update(req, id, updateProductDto) {
         const user = req['user'];
-        return this.productService.update(updateProductDto, user);
+        return this.productService.update(+id, updateProductDto, user);
     }
     remove(req, id) {
         const user = req['user'];
@@ -64,11 +64,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(''),
+    (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('id')),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, update_product_dto_1.UpdateProductDto]),
+    __metadata("design:paramtypes", [Object, String, update_product_dto_1.UpdateProductDto]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "update", null);
 __decorate([
@@ -80,7 +81,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "remove", null);
 exports.ProductController = ProductController = __decorate([
-    (0, common_1.Controller)('product'),
+    (0, common_1.Controller)('products'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [product_service_1.ProductService])
 ], ProductController);

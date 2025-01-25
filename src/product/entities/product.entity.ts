@@ -5,16 +5,16 @@ export class Product {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({nullable: false})
     name: string;
 
-    @Column()
+    @Column({nullable: true})
     description: string;
 
-    @Column()
+    @Column({nullable: false})
     price: number;
 
-    @Column()
+    @Column({nullable: false})
     stock: number;
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })

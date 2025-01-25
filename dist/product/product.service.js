@@ -66,10 +66,10 @@ let ProductService = class ProductService {
         try {
             const product = await this.ProductRepo.findOne({ where: { id: id } });
             if (!product) {
-                throw new common_1.HttpException({
-                    statusCode: common_1.HttpStatus.NOT_FOUND,
+                return {
+                    statusCode: common_1.HttpStatus.BAD_REQUEST,
                     message: 'Product not found',
-                }, common_1.HttpStatus.NOT_FOUND);
+                };
             }
             return {
                 statusCode: common_1.HttpStatus.CREATED,
@@ -85,7 +85,7 @@ let ProductService = class ProductService {
             }, common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async update(updateProductDto, user) {
+    async update(id, updateProductDto, user) {
         try {
             if (user.role !== user_entity_1.UserRole.ADMIN) {
                 throw new common_1.HttpException({
@@ -93,7 +93,7 @@ let ProductService = class ProductService {
                     message: 'Only admin can delete products',
                 }, common_1.HttpStatus.FORBIDDEN);
             }
-            const updatedProduct = await this.ProductRepo.update(updateProductDto.id, updateProductDto);
+            const updatedProduct = await this.ProductRepo.update(id, updateProductDto);
             return {
                 statusCode: common_1.HttpStatus.CREATED,
                 message: 'Product Updated successfully',

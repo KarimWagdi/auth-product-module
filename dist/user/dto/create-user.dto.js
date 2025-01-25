@@ -17,19 +17,20 @@ class CreateUserDto {
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
-    (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)({ example: 'test@test.com' }),
+    (0, class_validator_1.IsEmail)(),
+    (0, swagger_1.ApiProperty)({ example: 'test@test.com', description: 'user email must be unique', format: 'email' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)({ example: '123456' }),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ example: '123456', description: 'the login password' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "password", void 0);
 __decorate([
     (0, class_validator_1.IsEnum)(user_entity_1.UserRole),
-    (0, swagger_1.ApiProperty)({ example: 'user' }),
+    (0, swagger_1.ApiProperty)({ example: 'user', description: 'the user permission in the app and default user' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "role", void 0);
 //# sourceMappingURL=create-user.dto.js.map

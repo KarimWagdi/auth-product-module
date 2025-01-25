@@ -16,12 +16,6 @@ class UpdateProductDto {
 }
 exports.UpdateProductDto = UpdateProductDto;
 __decorate([
-    (0, class_validator_1.IsDefined)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)({ example: 1 }),
-    __metadata("design:type", Number)
-], UpdateProductDto.prototype, "id", void 0);
-__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({ example: 'name' }),

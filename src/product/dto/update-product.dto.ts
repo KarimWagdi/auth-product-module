@@ -2,11 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProductDto {
-    
-    @IsDefined()
-    @IsNotEmpty()
-    @ApiProperty({ example: 1 })
-    id: number;
 
     @IsString()
     @IsNotEmpty()
