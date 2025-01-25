@@ -18,25 +18,25 @@ exports.UpdateProductDto = UpdateProductDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)({ example: 'name' }),
+    (0, swagger_1.ApiProperty)({ example: 'name', description: 'The name of the product' }),
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
-    (0, swagger_1.ApiProperty)({ example: 'topic' }),
+    (0, swagger_1.ApiProperty)({ example: 'topic', description: 'The topic of the product' }),
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "description", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
-    (0, swagger_1.ApiProperty)({ example: 100 }),
+    (0, swagger_1.ApiProperty)({ example: 100, description: 'The price of the product' }),
     __metadata("design:type", Number)
 ], UpdateProductDto.prototype, "price", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
-    (0, swagger_1.ApiProperty)({ example: 100 }),
+    (0, swagger_1.ApiProperty)({ example: 100, description: 'The number of products in stock' }),
     __metadata("design:type", Number)
 ], UpdateProductDto.prototype, "stock", void 0);
 //# sourceMappingURL=update-product.dto.js.map
